@@ -18,8 +18,8 @@ abstract class Module: IAccessor {
         }
     }
 
-    fun onEnable() {}
-    fun onDisable() {}
+    open fun onEnable() {}
+    open fun onDisable() {}
 
     fun toggle() {
         set(!enabled)
