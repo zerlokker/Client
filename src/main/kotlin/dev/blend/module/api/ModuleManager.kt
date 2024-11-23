@@ -5,7 +5,7 @@ import dev.blend.util.interfaces.IManager
 
 object ModuleManager: IManager {
 
-    val modules = ArrayList<Module>()
+    val modules = mutableListOf<Module>()
 
     override fun initialize() {
         modules.addAll(arrayOf(

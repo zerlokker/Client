@@ -15,7 +15,7 @@ abstract class Module: IAccessor {
         if (this::class.java.isAnnotationPresent(ModuleInfo::class.java)) {
             moduleInfo = this::class.java.getAnnotation(ModuleInfo::class.java)
         } else {
-            throw IllegalStateException("@ModuleInfo not found on ${this.javaClass.simpleName}")
+            throw IllegalStateException("@ModuleInfo not found on ${this::class.java.simpleName}")
         }
     }
 
