@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.utils.extendsFrom
 
 plugins {
     kotlin("jvm") version "2.0.21"
@@ -41,6 +42,7 @@ dependencies {
     }
 
     afterEvaluate {
+        configurations.named("implementation").extendsFrom(configurations.named("library"))
         configurations.named("library").get().incoming.resolutionResult.allDependencies.forEach { library ->
             val requestedDependency = library.requested.toString()
             val compileOnlyApiDependency = dependencies.create(requestedDependency).apply {
