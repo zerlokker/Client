@@ -1,5 +1,6 @@
 package dev.blend.module
 
+import dev.blend.event.api.EventBus
 import dev.blend.module.api.ModuleInfo
 import dev.blend.util.IAccessor
 import org.lwjgl.glfw.GLFW
@@ -29,7 +30,9 @@ abstract class Module: IAccessor {
             this.enabled = enabled
             if (this.enabled) {
                 onEnable()
+                EventBus.subscribe(this)
             } else {
+                EventBus.unsubscribe(this)
                 onDisable()
             }
         }

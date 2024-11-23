@@ -1,3 +1,9 @@
 package best.azura.eventbus.core;
 
-public interface Event{}
+import dev.blend.event.api.EventBus;
+
+public interface Event{
+    default void call() {
+        EventBus.INSTANCE.post(this);
+    }
+}
