@@ -3,6 +3,7 @@ package dev.blend.module.impl.client
 import dev.blend.module.Module
 import dev.blend.module.api.Category
 import dev.blend.module.api.ModuleInfo
+import dev.blend.ui.dropdown.DropdownClickGUI
 import org.lwjgl.glfw.GLFW
 
 @ModuleInfo(
@@ -14,7 +15,7 @@ import org.lwjgl.glfw.GLFW
 object ClickGUIModule: Module() {
 
     override fun onEnable() {
-
+        mc.setScreen(DropdownClickGUI)
     }
 
     override fun onDisable() {

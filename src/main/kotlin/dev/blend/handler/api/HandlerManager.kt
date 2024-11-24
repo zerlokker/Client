@@ -12,6 +12,9 @@ object HandlerManager: IManager {
         handlers.addAll(arrayOf(
             KeyPressHandler()
         ))
+        handlers.forEach {
+            it.register()
+        }
     }
 
 }

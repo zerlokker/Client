@@ -14,6 +14,8 @@ abstract class Command {
         }
     }
 
+    abstract fun execute(args: List<String>)
+
     fun getName(): String {
         return commandInfo.names[0]
     }
