@@ -10,7 +10,8 @@ object HandlerManager: IManager {
 
     override fun initialize() {
         handlers.addAll(arrayOf(
-            KeyPressHandler()
+            KeyPressHandler(),
+            ThemeHandler
         ))
         handlers.forEach {
             it.register()
