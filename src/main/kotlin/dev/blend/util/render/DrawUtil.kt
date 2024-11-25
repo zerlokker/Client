@@ -56,7 +56,7 @@ object DrawUtil: IAccessor {
         nvgBeginPath(context)
         nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
-            nvgRect(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
+            nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgFillColor(context, nvgColor)
             nvgFill(context)
