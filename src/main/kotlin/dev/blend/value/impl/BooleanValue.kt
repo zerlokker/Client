@@ -8,14 +8,13 @@ class BooleanValue(
     name: String,
     parent: ValueHolder,
     defaultValue: Boolean,
-    visibility: () -> Boolean,
+    visibility: () -> Boolean = { true },
 ): Value<Boolean>(
     name,
     parent,
     defaultValue,
     visibility
 ) {
-    constructor(name: String, parent: ValueHolder, defaultValue: Boolean): this(name, parent, defaultValue, { true })
     override fun getJsonObject(): JsonObject {
         val obj = JsonObject()
         obj.addProperty("name", name)

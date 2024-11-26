@@ -7,7 +7,7 @@ abstract class Value<T>(
     val name: String,
     val parent: ValueHolder,
     private val defaultValue: T,
-    val visibility: () -> Boolean,
+    var visibility: () -> Boolean,
 ) {
     protected var value = defaultValue
     fun get(): T {

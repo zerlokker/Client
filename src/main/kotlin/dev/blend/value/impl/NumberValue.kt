@@ -8,11 +8,10 @@ class NumberValue(
     name: String,
     parent: ValueHolder,
     defaultValue: Number,
-    visibility: () -> Boolean,
+    visibility: () -> Boolean = { true },
 ): Value<Number>(
     name, parent, defaultValue, visibility
 ) {
-    constructor(name: String, parent: ValueHolder, defaultValue: Number): this(name, parent, defaultValue, { true })
 
     override fun getJsonObject(): JsonObject {
         val obj = JsonObject()
