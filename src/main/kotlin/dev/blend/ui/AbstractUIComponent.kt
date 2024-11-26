@@ -3,10 +3,10 @@ package dev.blend.ui
 import dev.blend.util.interfaces.IScreen
 
 abstract class AbstractUIComponent(
-    var x: Double,
-    var y: Double,
-    var width: Double,
-    var height: Double,
+    var x: Double = 0.0,
+    var y: Double = 0.0,
+    var width: Double = 0.0,
+    var height: Double = 0.0,
 ): IScreen {
     fun isOver(mouseX: Number, mouseY: Number): Boolean {
         return x > mouseX.toDouble() && y > mouseY.toDouble() && x + width < mouseX.toDouble() && y + height < mouseY.toDouble()

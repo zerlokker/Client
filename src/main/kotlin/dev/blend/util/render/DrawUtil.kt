@@ -147,17 +147,17 @@ object DrawUtil: IAccessor {
     }
 
     private fun preRender() {
-        RenderSystem.enableBlend()
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE)
-        RenderSystem.enableDepthTest()
-        RenderSystem.depthFunc(GL11.GL_LESS)
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT)
+//        RenderSystem.enableBlend()
+//        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE)
+//        RenderSystem.enableDepthTest();
+//        RenderSystem.depthFunc(GL11.GL_LESS);
+//        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT);
     }
     private fun postRender() {
-        RenderSystem.disableCull()
-        RenderSystem.disableDepthTest()
-        RenderSystem.enableBlend()
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE)
+//        RenderSystem.disableCull()
+//        RenderSystem.disableDepthTest()
+//        RenderSystem.enableBlend()
+//        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE)
     }
     private fun alignX(x: Number, width: Number, alignment: Alignment): Float {
         return when (alignment) {
