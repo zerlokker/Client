@@ -13,7 +13,7 @@ object MiscUtil: IAccessor {
 
     @JvmStatic
     fun isOver(x: Number, y: Number, width: Number, height: Number, mouseX: Number, mouseY: Number): Boolean {
-        return x.toDouble() > mouseX.toDouble() && y.toDouble() > mouseY.toDouble() && x.toDouble() + width.toDouble() < mouseX.toDouble() && y.toDouble() + height.toDouble() < mouseY.toDouble()
+        return mouseX.toDouble() > x.toDouble() && mouseX.toDouble() < x.toDouble() + width.toDouble() && mouseY.toDouble() > y.toDouble() && mouseY.toDouble() < y.toDouble() + height.toDouble()
     }
 
     @JvmStatic

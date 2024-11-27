@@ -11,6 +11,7 @@ import org.lwjgl.nanovg.NanoVGGL3
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryStack
 import java.awt.Color
+import java.lang.IllegalArgumentException
 import java.nio.ByteBuffer
 
 object DrawUtil: IAccessor {
@@ -113,11 +114,26 @@ object DrawUtil: IAccessor {
         }
         nvgClosePath(context)
     }
+    @JvmStatic
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: DoubleArray, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
+        if (radius.size != 4) {
+            throw IllegalArgumentException("DoubleArray of size 4 required. only ${radius.size} found.")
+        }
+        nvgBeginPath(context)
+        nvgShapeAntiAlias(context, true)
+        NVGColor.calloc().use { nvgColor ->
+            nvgRoundedRectVarying(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius[0].toFloat(), radius[1].toFloat(), radius[2].toFloat(), radius[3].toFloat())
+            nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
+            nvgFillColor(context, nvgColor)
+            nvgFill(context)
+        }
+        nvgClosePath(context)
+    }
 
     // Font Rendering
     @JvmStatic
-    fun drawString(text: String?, x: Number, y: Number, size: Number, color: Color) {
-        drawString("regular", text!!, x, y, size, color)
+    fun drawString(text: String?, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
+        drawString("regular", text!!, x, y, size, color, alignment)
     }
     @JvmStatic
     fun drawString(font: String, text: String, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {

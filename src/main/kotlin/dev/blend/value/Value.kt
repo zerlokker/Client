@@ -10,7 +10,7 @@ abstract class Value<T>(
     var visibility: () -> Boolean,
 ) {
     protected var value = defaultValue
-    fun get(): T {
+    open fun get(): T {
         return value
     }
     open fun set(value: T) {

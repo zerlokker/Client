@@ -9,9 +9,9 @@ abstract class AbstractUIComponent(
     var height: Double = 0.0,
 ): IScreen {
     fun isOver(mouseX: Number, mouseY: Number): Boolean {
-        return x > mouseX.toDouble() && y > mouseY.toDouble() && x + width < mouseX.toDouble() && y + height < mouseY.toDouble()
+        return mouseX.toDouble() > x && mouseX.toDouble() < x + width && mouseY.toDouble() > y && mouseY.toDouble() < y + height
     }
     fun isOver(x: Number, y: Number, width: Number, height: Number, mouseX: Number, mouseY: Number): Boolean {
-        return x.toDouble() > mouseX.toDouble() && y.toDouble() > mouseY.toDouble() && x.toDouble() + width.toDouble() < mouseX.toDouble() && y.toDouble() + height.toDouble() < mouseY.toDouble()
+        return mouseX.toDouble() > x.toDouble() && mouseX.toDouble() < x.toDouble() + width.toDouble() && mouseY.toDouble() > y.toDouble() && mouseY.toDouble() < y.toDouble() + height.toDouble()
     }
 }

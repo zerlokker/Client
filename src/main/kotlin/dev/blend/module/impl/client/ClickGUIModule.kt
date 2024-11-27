@@ -19,7 +19,7 @@ object ClickGUIModule: Module() {
     }
 
     override fun onDisable() {
-
+        mc.setScreen(null)
     }
 
 }

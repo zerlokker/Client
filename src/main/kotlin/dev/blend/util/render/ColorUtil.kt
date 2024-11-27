@@ -14,7 +14,7 @@ object ColorUtil {
     }
     @JvmStatic
     fun applyOpacity(color: Color, opacity: Double): Color {
-        return Color(color.red, color.green, color.blue, (opacity / 255.0).toInt())
+        return Color(color.red, color.green, color.blue, ((opacity / 1.0) * 255.0).toInt())
     }
     @JvmStatic
     fun setOpacity(color: Color, opacity: Int): Color {

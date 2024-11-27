@@ -13,7 +13,7 @@ object ModuleManager: IManager {
             ClickGUIModule
         ))
         modules.sortBy {
-            it.getName()
+            it.name
         }
         modules.forEach {
             it.set(it.moduleInfo.enabled)

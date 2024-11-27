@@ -3,13 +3,15 @@ package dev.blend.module
 import dev.blend.event.api.EventBus
 import dev.blend.module.api.ModuleInfo
 import dev.blend.util.IAccessor
+import dev.blend.value.api.ValueHolder
 import org.lwjgl.glfw.GLFW
 
-abstract class Module: IAccessor {
+abstract class Module: IAccessor, ValueHolder() {
 
     val moduleInfo: ModuleInfo
     var key = GLFW.GLFW_KEY_UNKNOWN
-    var enabled = false
+    val name: String
+    private var enabled = false
 
     init {
         if (this::class.java.isAnnotationPresent(ModuleInfo::class.java)) {
@@ -17,6 +19,7 @@ abstract class Module: IAccessor {
         } else {
             throw IllegalStateException("@ModuleInfo not found on ${this::class.java.simpleName}")
         }
+        name = moduleInfo.names.first()
     }
 
     open fun onEnable() {}
@@ -37,9 +40,8 @@ abstract class Module: IAccessor {
             }
         }
     }
-
-    fun getName(): String {
-        return moduleInfo.names[0]
+    fun get(): Boolean {
+        return enabled
     }
 
 }
