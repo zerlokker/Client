@@ -61,6 +61,21 @@ object DrawUtil: IAccessor {
 
     @JvmStatic
     fun translate(xTranslate: Number, yTranslate: Number) = nvgTranslate(context, xTranslate.toFloat(), yTranslate.toFloat())
+    @JvmStatic
+    fun resetTranslate() = nvgResetTransform(context)
+
+    @JvmStatic
+    fun scissor(x: Number, y: Number, width: Number, height: Number) = nvgScissor(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
+    @JvmStatic
+    fun resetScissor() = nvgResetScissor(context)
+    @JvmStatic
+    fun beginPath() = nvgBeginPath(context)
+    @JvmStatic
+    fun pathWindingCCW() = nvgPathWinding(context, NVG_CCW)
+    @JvmStatic
+    fun fill() = nvgFill(context)
+    @JvmStatic
+    fun nvgRoundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number) = nvgRoundedRect(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat(), radius.toFloat())
 
     // Shapes.
     @JvmStatic

@@ -39,7 +39,6 @@ object DropdownClickGUI: Screen(Text.of("Dropdown Click GUI")) {
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        Client.logger.info("Clicked at X: $mouseX Y: $mouseY")
         components.forEach {
             if (it.click(mouseX, mouseY, button)) {
                 return true

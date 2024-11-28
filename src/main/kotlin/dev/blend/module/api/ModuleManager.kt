@@ -2,6 +2,8 @@ package dev.blend.module.api
 
 import dev.blend.module.Module
 import dev.blend.module.impl.client.ClickGUIModule
+import dev.blend.module.impl.client.ThemeModule
+import dev.blend.module.impl.movement.SprintModule
 import dev.blend.util.interfaces.IManager
 
 object ModuleManager: IManager {
@@ -10,7 +12,9 @@ object ModuleManager: IManager {
 
     override fun initialize() {
         modules.addAll(arrayOf(
-            ClickGUIModule
+            ClickGUIModule,
+            ThemeModule,
+            SprintModule
         ))
         modules.sortBy {
             it.name

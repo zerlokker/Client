@@ -48,6 +48,8 @@ class ModuleComponent(
     }
 
     override fun render(mouseX: Int, mouseY: Int) {
+        DrawUtil.save()
+        DrawUtil.scissor(x, y, width, height)
         if (module.get()) {
             if (last) {
                 DrawUtil.roundedRect(x, y, width, initialHeight, doubleArrayOf(0.0, 0.0, 5.0, 5.0), ColorUtil.applyOpacity(ThemeHandler.getPrimary(), 0.75))
@@ -60,11 +62,13 @@ class ModuleComponent(
         var veryRealHeight = initialHeight
         components.forEach {
             it.x = x
-            it.y = y
+            it.y = y + veryRealHeight
             it.width = width
             it.render(mouseX, mouseY)
             veryRealHeight += it.height
         }
+        DrawUtil.resetScissor()
+        DrawUtil.restore()
 
         height = if (expanded) veryRealHeight else initialHeight
         last = parent.components.last() == this && !expanded

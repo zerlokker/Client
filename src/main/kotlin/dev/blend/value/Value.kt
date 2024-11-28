@@ -8,7 +8,12 @@ abstract class Value<T>(
     val parent: ValueHolder,
     private val defaultValue: T,
     var visibility: () -> Boolean,
-) {
+): ValueHolder() {
+
+    init {
+        parent.values.add(this)
+    }
+
     protected var value = defaultValue
     open fun get(): T {
         return value
