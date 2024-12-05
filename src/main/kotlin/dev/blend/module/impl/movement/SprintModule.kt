@@ -7,6 +7,7 @@ import dev.blend.interfaces.KeybindingAccessor
 import dev.blend.module.Module
 import dev.blend.module.api.Category
 import dev.blend.module.api.ModuleInfo
+import dev.blend.value.impl.BooleanValue
 import net.minecraft.client.util.InputUtil
 
 @ModuleInfo(
@@ -16,6 +17,8 @@ import net.minecraft.client.util.InputUtil
     enabled = true
 )
 object SprintModule: Module() {
+
+    private val allDirections = BooleanValue("All directions", this, false)
 
     override fun onDisable() {
         mc.options.sprintKey.isPressed = InputUtil.isKeyPressed(

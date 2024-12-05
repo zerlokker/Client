@@ -40,8 +40,10 @@ object DropdownClickGUI: Screen(Text.of("Dropdown Click GUI")) {
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
         components.forEach {
-            if (it.click(mouseX, mouseY, button)) {
-                return true
+            if (it.isOver(mouseX, mouseY)) {
+                if (it.click(mouseX, mouseY, button)) {
+                    return true
+                }
             }
         }
         return super.mouseClicked(mouseX, mouseY, button)

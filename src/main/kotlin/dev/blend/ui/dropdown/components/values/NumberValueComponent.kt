@@ -9,7 +9,7 @@ import dev.blend.value.impl.NumberValue
 
 class NumberValueComponent(
     parent: ModuleComponent,
-    value: NumberValue
+    override val value:  NumberValue
 ): AbstractValueComponent(
     parent, value, height = 20.0
 ) {

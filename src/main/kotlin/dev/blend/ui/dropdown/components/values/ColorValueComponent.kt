@@ -9,7 +9,7 @@ import dev.blend.value.impl.ColorValue
 
 class ColorValueComponent(
     parent: ModuleComponent,
-    value: ColorValue
+    override val value:  ColorValue
 ): AbstractValueComponent(
     parent, value, height = 20.0
 ) {

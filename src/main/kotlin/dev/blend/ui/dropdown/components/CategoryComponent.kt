@@ -4,8 +4,10 @@ import dev.blend.handler.impl.ThemeHandler
 import dev.blend.module.api.Category
 import dev.blend.module.api.ModuleManager
 import dev.blend.ui.AbstractUIComponent
+import dev.blend.util.animations.*
 import dev.blend.util.render.Alignment
 import dev.blend.util.render.DrawUtil
+import org.lwjgl.glfw.GLFW
 
 class CategoryComponent(
     private val category: Category
@@ -15,7 +17,9 @@ class CategoryComponent(
 ) {
 
     val components = mutableListOf<ModuleComponent>()
+    private val expandAnimation = SineOutAnimation()
     private val initialHeight = height;
+    private var expanded = true
 
     init {
         ModuleManager.modules.filter {
@@ -32,6 +36,8 @@ class CategoryComponent(
     }
 
     override fun render(mouseX: Int, mouseY: Int) {
+        DrawUtil.save()
+        DrawUtil.scissor(x, y, width, height)
         DrawUtil.roundedRect(x, y, width, height, 5, ThemeHandler.getBackground())
         DrawUtil.drawString(category.properName, x + (width / 2), y + (initialHeight / 2), 12, ThemeHandler.getTextColor(), Alignment.CENTER)
 
@@ -41,15 +47,43 @@ class CategoryComponent(
             it.y = y + veryRealHeight
             it.width = width
             it.render(mouseX, mouseY)
-            veryRealHeight += it.height
+            veryRealHeight +=
+                if (it.isExpanding()) {
+                    it.expandAnimation.get()
+                } else {
+                    it.height
+                }
         }
-        this.height = veryRealHeight
+        expandAnimation.animate(
+            if (expanded) veryRealHeight else initialHeight
+        )
+        DrawUtil.resetScissor()
+        DrawUtil.restore()
+
+        if (canAnimateExpansion()) {
+            this.height = expandAnimation.get()
+        } else {
+            expandAnimation.set(veryRealHeight)
+            this.height = veryRealHeight
+        }
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
-        components.forEach {
-            if (it.click(mouseX, mouseY, mouseButton)) {
+        if (isOver(x, y, width, initialHeight, mouseX, mouseY)) {
+            if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
                 return true
+            } else if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                expanded = !expanded
+                return true
+            }
+        }
+        if (expanded) {
+            components.forEach {
+                if (it.isOver(mouseX, mouseY)) {
+                    if (it.click(mouseX, mouseY, mouseButton)) {
+                        return true
+                    }
+                }
             }
         }
         return false
@@ -77,6 +111,13 @@ class CategoryComponent(
         components.forEach {
             it.close()
         }
+    }
+
+    fun canAnimateExpansion(): Boolean {
+        return !components.any { it.isExpanding() }
+    }
+    fun isExpanding(): Boolean {
+        return !expandAnimation.finished
     }
 
 }

@@ -14,7 +14,7 @@ abstract class Value<T>(
         parent.values.add(this)
     }
 
-    protected var value = defaultValue
+    public var value = defaultValue
     open fun get(): T {
         return value
     }

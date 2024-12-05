@@ -15,6 +15,9 @@ class BooleanValue(
     defaultValue,
     visibility
 ) {
+    fun toggle() {
+        set(!value)
+    }
     override fun getJsonObject(): JsonObject {
         val obj = JsonObject()
         obj.addProperty("name", name)

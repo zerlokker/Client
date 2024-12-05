@@ -69,6 +69,8 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun resetScissor() = nvgResetScissor(context)
     @JvmStatic
+    fun intersectScissor(x: Number, y:Number, width:Number, height: Number) = nvgIntersectScissor(context, x.toFloat(), y.toFloat(), width.toFloat(), height.toFloat())
+    @JvmStatic
     fun beginPath() = nvgBeginPath(context)
     @JvmStatic
     fun pathWindingCCW() = nvgPathWinding(context, NVG_CCW)
@@ -81,7 +83,6 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun rect(x: Number, y: Number, width: Number, height: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
@@ -93,7 +94,6 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun rectOutline(x: Number, y: Number, width: Number, height: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
@@ -107,7 +107,6 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRoundedRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
@@ -119,7 +118,6 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRoundedRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
@@ -135,7 +133,6 @@ object DrawUtil: IAccessor {
             throw IllegalArgumentException("DoubleArray of size 4 required. only ${radius.size} found.")
         }
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRoundedRectVarying(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius[0].toFloat(), radius[1].toFloat(), radius[2].toFloat(), radius[3].toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
@@ -153,7 +150,6 @@ object DrawUtil: IAccessor {
     @JvmStatic
     fun drawString(font: String, text: String, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
-        nvgShapeAntiAlias(context, true)
         NVGColor.calloc().use { nvgColor ->
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgFillColor(context, nvgColor)
@@ -169,7 +165,7 @@ object DrawUtil: IAccessor {
         var width: Float
         nvgFontFace(context, font)
         nvgFontSize(context, size.toFloat())
-        MemoryStack.stackPush().use { stack ->
+        MemoryStack.stackPush().use {
             val bounds = floatArrayOf()
             nvgTextBounds(context, 0.0f, 0.0f, text, bounds)
             width = bounds[0] - bounds[2]
@@ -179,16 +175,18 @@ object DrawUtil: IAccessor {
 
     private fun preRender() {
         RenderSystem.enableBlend()
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE)
-        RenderSystem.enableDepthTest();
-        RenderSystem.depthFunc(GL11.GL_LESS);
-        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT);
+        RenderSystem.defaultBlendFunc()
+//        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE)
+//        RenderSystem.disableDepthTest()
+//        RenderSystem.depthFunc(GL11.GL_LESS)
+//        RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT)
     }
     private fun postRender() {
         RenderSystem.disableCull()
         RenderSystem.disableDepthTest()
-        RenderSystem.enableBlend()
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE)
+        RenderSystem.defaultBlendFunc()
+//        RenderSystem.enableBlend()
+//        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ZERO, GlStateManager.DstFactor.ONE)
     }
     private fun alignX(x: Number, width: Number, alignment: Alignment): Float {
         return when (alignment) {

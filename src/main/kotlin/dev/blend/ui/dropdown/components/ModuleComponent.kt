@@ -7,6 +7,7 @@ import dev.blend.ui.dropdown.components.values.BooleanValueComponent
 import dev.blend.ui.dropdown.components.values.ColorValueComponent
 import dev.blend.ui.dropdown.components.values.ModeValueComponent
 import dev.blend.ui.dropdown.components.values.NumberValueComponent
+import dev.blend.util.animations.SineOutAnimation
 import dev.blend.util.render.Alignment
 import dev.blend.util.render.ColorUtil
 import dev.blend.util.render.DrawUtil
@@ -25,6 +26,8 @@ class ModuleComponent(
 ) {
 
     val components = mutableListOf<AbstractValueComponent>()
+    val expandAnimation = SineOutAnimation()
+    private val expandAnimation2 = SineOutAnimation()
     private val initialHeight = height
     private var expanded = false
     private var last = false
@@ -49,7 +52,7 @@ class ModuleComponent(
 
     override fun render(mouseX: Int, mouseY: Int) {
         DrawUtil.save()
-        DrawUtil.scissor(x, y, width, height)
+        DrawUtil.intersectScissor(x, y, width, height)
         if (module.get()) {
             if (last) {
                 DrawUtil.roundedRect(x, y, width, initialHeight, doubleArrayOf(0.0, 0.0, 5.0, 5.0), ColorUtil.applyOpacity(ThemeHandler.getPrimary(), 0.75))
@@ -67,10 +70,17 @@ class ModuleComponent(
             it.render(mouseX, mouseY)
             veryRealHeight += it.height
         }
-        DrawUtil.resetScissor()
+        expandAnimation.animate(
+            if (expanded) veryRealHeight else initialHeight
+        )
         DrawUtil.restore()
 
-        height = if (expanded) veryRealHeight else initialHeight
+//        if (canAnimateExpansion()) {
+            this.height = expandAnimation.get()
+//        } else {
+//            expandAnimation.set(veryRealHeight)
+//            this.height = veryRealHeight
+//        }
         last = parent.components.last() == this && !expanded
     }
 
@@ -80,6 +90,13 @@ class ModuleComponent(
                 module.toggle()
             } else {
                 expanded = !expanded
+            }
+        }
+        components.filter {
+            expanded && it.value.visibility() && it.isOver(mouseX, mouseY)
+        }.forEach {
+            if (it.click(mouseX, mouseY, mouseButton)) {
+                return true
             }
         }
         return false
@@ -97,6 +114,13 @@ class ModuleComponent(
         components.forEach {
             it.close()
         }
+    }
+
+    fun canAnimateExpansion(): Boolean {
+        return !parent.isExpanding() //&& !components.any { it.isExpanding() }
+    }
+    fun isExpanding(): Boolean {
+        return !expandAnimation.finished
     }
 
 }

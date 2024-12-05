@@ -7,9 +7,9 @@ object ColorUtil {
     @JvmStatic
     fun mixColors(primary: Color, secondary: Color, factor: Double): Color {
         val otherFactor = 1.0 - factor
-        val redFactor = (primary.red * otherFactor + secondary.red * otherFactor).toInt()
-        val greenFactor = (primary.green * otherFactor + secondary.green * otherFactor).toInt()
-        val blueFactor = (primary.blue * otherFactor + secondary.blue * otherFactor).toInt()
+        val redFactor = (primary.red * factor + secondary.red * otherFactor).toInt()
+        val greenFactor = (primary.green * factor + secondary.green * otherFactor).toInt()
+        val blueFactor = (primary.blue * factor + secondary.blue * otherFactor).toInt()
         return Color(redFactor, greenFactor, blueFactor)
     }
     @JvmStatic

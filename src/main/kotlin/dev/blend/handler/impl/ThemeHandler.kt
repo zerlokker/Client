@@ -6,6 +6,8 @@ import java.awt.Color
 
 object ThemeHandler: Handler {
 
+    val gray = Color(120, 120, 120)
+
     @JvmStatic
     fun getPrimary(): Color {
         return Color(0, 160, 255)
@@ -16,6 +18,10 @@ object ThemeHandler: Handler {
     }
     @JvmStatic
     fun getTextColor(): Color {
+        return Color(255, 255, 255)
+    }
+    @JvmStatic
+    fun getContrast(): Color {
         return Color(255, 255, 255)
     }
 

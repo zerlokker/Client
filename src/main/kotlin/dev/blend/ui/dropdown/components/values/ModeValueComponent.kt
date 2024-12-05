@@ -9,7 +9,7 @@ import dev.blend.value.impl.ModeValue
 
 class ModeValueComponent(
     parent: ModuleComponent,
-    value: ModeValue
+    override val value:  ModeValue
 ): AbstractValueComponent(
     parent, value, height = 20.0
 ) {
