@@ -67,8 +67,10 @@ class ModuleComponent(
             it.x = x
             it.y = y + veryRealHeight
             it.width = width
-            it.render(mouseX, mouseY)
-            veryRealHeight += it.height
+            if (it.value.visibility()) {
+                it.render(mouseX, mouseY)
+                veryRealHeight += it.height
+            }
         }
         expandAnimation.animate(
             if (expanded) veryRealHeight else initialHeight
@@ -103,10 +105,20 @@ class ModuleComponent(
     }
 
     override fun release(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
+        components.forEach {
+            if (it.release(mouseX, mouseY, mouseButton)) {
+                return true
+            }
+        }
         return false
     }
 
     override fun key(key: Int, scancode: Int, modifiers: Int): Boolean {
+        components.forEach {
+            if (it.key(key, scancode, modifiers)) {
+                return true
+            }
+        }
         return false
     }
 

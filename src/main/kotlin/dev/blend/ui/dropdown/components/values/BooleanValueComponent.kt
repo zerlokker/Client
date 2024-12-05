@@ -17,7 +17,7 @@ class BooleanValueComponent(
 ) {
 
     private val toggleAnimation = SineOutAnimation()
-    private val clickAnimation = SineOutAnimation()
+    private val toggleDependentAnimation = SineOutAnimation()
 
     override fun init() {
 
@@ -30,17 +30,16 @@ class BooleanValueComponent(
         val pillY = y + (height / 2.0)
         val indicatorRadius = 6.0
         val indicatorOffset = 1.0
-        val indicatorX = (pillX - ((indicatorRadius / 2) + indicatorOffset)) - ((pillWidth - (indicatorRadius + (indicatorOffset * 2.0))) * toggleAnimation.get())
+        val indicatorX = (pillX - (pillWidth - indicatorRadius + (indicatorOffset * 2.0))) + (pillWidth - (indicatorRadius + (indicatorOffset * 2.0))) * toggleAnimation.get()
 
         val pillColor = ColorUtil.mixColors(ThemeHandler.gray, ThemeHandler.getPrimary(), toggleAnimation.get())
-        val outline = ColorUtil.applyOpacity(ThemeHandler.getContrast(), toggleAnimation.get())
         with(DrawUtil) {
             drawString(value.name, x + padding, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
             roundedRect(pillX, pillY, pillWidth, pillHeight, pillHeight / 2.0, pillColor, Alignment.CENTER_RIGHT)
-            roundedRect(indicatorX, pillY, indicatorRadius + ((indicatorRadius / 3.0) * clickAnimation.get()), indicatorRadius, indicatorRadius / 2.0, ThemeHandler.getContrast(), Alignment.CENTER)
+            roundedRect(indicatorX, pillY, indicatorRadius + ((indicatorRadius / 3.0) * toggleDependentAnimation.get()), indicatorRadius, indicatorRadius / 2.0, ThemeHandler.getContrast(), Alignment.CENTER)
         }
         toggleAnimation.animate(if (value.get()) 1.0 else 0.0)
-        clickAnimation.animate(if (toggleAnimation.finished) 0.0 else 1.0)
+        toggleDependentAnimation.animate(if (toggleAnimation.finished) 0.0 else 1.0)
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
