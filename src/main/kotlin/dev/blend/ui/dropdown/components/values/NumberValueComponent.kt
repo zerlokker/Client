@@ -3,8 +3,7 @@ package dev.blend.ui.dropdown.components.values
 import dev.blend.handler.impl.ThemeHandler
 import dev.blend.ui.dropdown.components.AbstractValueComponent
 import dev.blend.ui.dropdown.components.ModuleComponent
-import dev.blend.util.animations.CubicOutAnimation
-import dev.blend.util.animations.SineOutAnimation
+import dev.blend.util.animations.*
 import dev.blend.util.render.Alignment
 import dev.blend.util.render.ColorUtil
 import dev.blend.util.render.DrawUtil
@@ -17,7 +16,7 @@ class NumberValueComponent(
     parent, value, height = 30.0
 ) {
 
-    private val dragAnimation = CubicOutAnimation()
+    private val dragAnimation = LinearAnimation()
     private val dragDependentAnimation = SineOutAnimation()
     private val selectAnimation = SineOutAnimation()
     private var held = false

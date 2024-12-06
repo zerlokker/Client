@@ -9,12 +9,12 @@ abstract class Value<T>(
     private val defaultValue: T,
     var visibility: () -> Boolean,
 ): ValueHolder() {
+    protected var value: T = defaultValue
 
     init {
         parent.values.add(this)
     }
 
-    public var value = defaultValue
     open fun get(): T {
         return value
     }

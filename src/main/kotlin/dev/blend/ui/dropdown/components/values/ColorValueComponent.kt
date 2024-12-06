@@ -18,7 +18,12 @@ class ColorValueComponent(
     }
 
     override fun render(mouseX: Int, mouseY: Int) {
-        DrawUtil.drawString(value.name, x + 5.0, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
+        val offset = 5.0
+        with(DrawUtil) {
+            drawString(value.name, x + 5.0, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
+            roundedRect(x + (width - offset), y + (height / 2.0), 20.0, height - (offset * 2.0), 2.0, value.get(), Alignment.CENTER_RIGHT)
+            roundedRect(x + (width - offset), y + (height / 2.0), 20.0, height - (offset * 2.0), 2.0, 1.0, ThemeHandler.getContrast(), Alignment.CENTER_RIGHT)
+        }
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {

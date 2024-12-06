@@ -19,7 +19,10 @@ class ModeValueComponent(
     }
 
     override fun render(mouseX: Int, mouseY: Int) {
-        DrawUtil.drawString(value.name, x + 5.0, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
+        with(DrawUtil) {
+            drawString(value.name, x + padding, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
+            drawString(value.get(), (x + width) - padding, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_RIGHT)
+        }
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {

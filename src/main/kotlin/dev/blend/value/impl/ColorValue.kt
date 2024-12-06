@@ -17,6 +17,10 @@ class ColorValue(
     var saturation: Float = 0.0f
     var brightness: Float = 1.0f
 
+    init {
+        set(defaultValue)
+    }
+
     fun set(hsb: FloatArray) {
         set(hsb[0], hsb[1], hsb[2])
     }
@@ -31,7 +35,7 @@ class ColorValue(
         return Color.getHSBColor(hue, saturation, brightness)
     }
     override fun set(value: Color) {
-        val hsb = floatArrayOf()
+        val hsb = floatArrayOf(1f, 1f, 1f)
         set(Color.RGBtoHSB(value.red, value.green, value.blue, hsb))
     }
     override fun getJsonObject(): JsonObject {

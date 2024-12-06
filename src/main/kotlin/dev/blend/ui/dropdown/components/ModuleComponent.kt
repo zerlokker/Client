@@ -27,7 +27,9 @@ class ModuleComponent(
 
     val components = mutableListOf<AbstractValueComponent>()
     val expandAnimation = SineOutAnimation()
-    private val expandAnimation2 = SineOutAnimation()
+    private val toggleAnimation = SineOutAnimation()
+    private val lastElementAnimation = SineOutAnimation()
+    private val expandToggleAnimation = SineOutAnimation()
     private val initialHeight = height
     private var expanded = false
     private var last = false
@@ -53,13 +55,7 @@ class ModuleComponent(
     override fun render(mouseX: Int, mouseY: Int) {
         DrawUtil.save()
         DrawUtil.intersectScissor(x, y, width, height)
-        if (module.get()) {
-            if (last) {
-                DrawUtil.roundedRect(x, y, width, initialHeight, doubleArrayOf(0.0, 0.0, 5.0, 5.0), ColorUtil.applyOpacity(ThemeHandler.getPrimary(), 0.75))
-            } else {
-                DrawUtil.rect(x, y, width, initialHeight, ColorUtil.applyOpacity(ThemeHandler.getPrimary(), 0.75))
-            }
-        }
+        DrawUtil.roundedRect(x, y, width, initialHeight, doubleArrayOf(0.0, 0.0, lastElementAnimation.get(), lastElementAnimation.get()), ColorUtil.applyOpacity(ThemeHandler.getPrimary(), toggleAnimation.get()))
         DrawUtil.drawString(module.name, x + (width / 2), y + (initialHeight / 2), 12, ThemeHandler.getTextColor(), Alignment.CENTER)
 
         var veryRealHeight = initialHeight
@@ -72,9 +68,6 @@ class ModuleComponent(
                 veryRealHeight += it.height
             }
         }
-        expandAnimation.animate(
-            if (expanded) veryRealHeight else initialHeight
-        )
         DrawUtil.restore()
 
 //        if (canAnimateExpansion()) {
@@ -84,6 +77,12 @@ class ModuleComponent(
 //            this.height = veryRealHeight
 //        }
         last = parent.components.last() == this && !expanded
+        expandAnimation.animate(
+            if (expanded) veryRealHeight else initialHeight
+        )
+        expandToggleAnimation.animate(if (expanded) 1.0 else 0.0)
+        toggleAnimation.animate(if (module.get()) 0.75 else 0.0)
+        lastElementAnimation.animate(if (last) 5.0 else 0.0)
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {

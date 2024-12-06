@@ -18,6 +18,7 @@ class CategoryComponent(
 
     val components = mutableListOf<ModuleComponent>()
     private val expandAnimation = SineOutAnimation()
+    private val expandToggleAnimation = SineOutAnimation()
     private val initialHeight = height;
     private var expanded = true
 
@@ -54,18 +55,18 @@ class CategoryComponent(
                     it.height
                 }
         }
-        expandAnimation.animate(
-            if (expanded) veryRealHeight else initialHeight
-        )
         DrawUtil.resetScissor()
         DrawUtil.restore()
-
         if (canAnimateExpansion()) {
             this.height = expandAnimation.get()
         } else {
             expandAnimation.set(veryRealHeight)
             this.height = veryRealHeight
         }
+        expandAnimation.animate(
+            if (expanded) veryRealHeight else initialHeight
+        )
+        expandToggleAnimation.animate(if (expanded) 1.0 else 0.0)
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
