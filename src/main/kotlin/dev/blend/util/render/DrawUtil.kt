@@ -166,9 +166,9 @@ object DrawUtil: IAccessor {
         nvgFontFace(context, font)
         nvgFontSize(context, size.toFloat())
         MemoryStack.stackPush().use {
-            val bounds = floatArrayOf()
+            val bounds = floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f)
             nvgTextBounds(context, 0.0f, 0.0f, text, bounds)
-            width = bounds[0] - bounds[2]
+            width = bounds[2] - bounds[0]
         }
         return width.toDouble()
     }
