@@ -65,17 +65,22 @@ class ModuleComponent(
             it.width = width
             if (it.value.visibility()) {
                 it.render(mouseX, mouseY)
-                veryRealHeight += it.height
+                veryRealHeight +=
+                    if (it.isExpanding() && (it is ModeValueComponent)) {
+                        it.expandAnimation.get()
+                    } else {
+                        it.height
+                    }
             }
         }
         DrawUtil.restore()
 
-//        if (canAnimateExpansion()) {
+        if (canAnimateExpansion()) {
             this.height = expandAnimation.get()
-//        } else {
-//            expandAnimation.set(veryRealHeight)
-//            this.height = veryRealHeight
-//        }
+        } else {
+            expandAnimation.set(veryRealHeight)
+            this.height = veryRealHeight
+        }
         last = parent.components.last() == this && !expanded
         expandAnimation.animate(
             if (expanded) veryRealHeight else initialHeight
@@ -127,8 +132,8 @@ class ModuleComponent(
         }
     }
 
-    fun canAnimateExpansion(): Boolean {
-        return !parent.isExpanding() //&& !components.any { it.isExpanding() }
+    private fun canAnimateExpansion(): Boolean {
+        return !components.any { it.isExpanding() }
     }
     fun isExpanding(): Boolean {
         return !expandAnimation.finished
