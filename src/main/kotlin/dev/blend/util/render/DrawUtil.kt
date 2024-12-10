@@ -6,6 +6,7 @@ import dev.blend.util.IAccessor
 import dev.blend.util.misc.MiscUtil
 import kotlinx.io.IOException
 import org.lwjgl.nanovg.NVGColor
+import org.lwjgl.nanovg.NVGPaint
 import org.lwjgl.nanovg.NanoVG.*
 import org.lwjgl.nanovg.NanoVGGL3
 import org.lwjgl.opengl.GL11
@@ -92,13 +93,48 @@ object DrawUtil: IAccessor {
         nvgClosePath(context)
     }
     @JvmStatic
-    fun rectOutline(x: Number, y: Number, width: Number, height: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
+    fun rect(x: Number, y: Number, width: Number, height: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
         NVGColor.calloc().use { nvgColor ->
             nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgStrokeWidth(context, stroke.toFloat())
             nvgStrokeColor(context, nvgColor)
+            nvgStroke(context)
+        }
+        nvgClosePath(context)
+    }
+    @JvmStatic
+    fun rect(x: Number, y: Number, width: Number, height: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgFillPaint(context, nvgPaint)
+            nvgFill(context)
+        }
+        nvgClosePath(context)
+    }
+    @JvmStatic
+    fun rect(x: Number, y: Number, width: Number, height: Number, stroke: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            nvgRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat())
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgStrokeWidth(context, stroke.toFloat())
+            nvgStrokePaint(context, nvgPaint)
             nvgStroke(context)
         }
         nvgClosePath(context)
@@ -116,6 +152,23 @@ object DrawUtil: IAccessor {
         nvgClosePath(context)
     }
     @JvmStatic
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            nvgRoundedRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius.toFloat())
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgFillPaint(context, nvgPaint)
+            nvgFill(context)
+        }
+        nvgClosePath(context)
+    }
+    @JvmStatic
     fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number, stroke: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
         nvgBeginPath(context)
         NVGColor.calloc().use { nvgColor ->
@@ -123,6 +176,24 @@ object DrawUtil: IAccessor {
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgStrokeWidth(context, stroke.toFloat())
             nvgStrokeColor(context, nvgColor)
+            nvgStroke(context)
+        }
+        nvgClosePath(context)
+    }
+    @JvmStatic
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: Number, stroke: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            nvgRoundedRect(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius.toFloat())
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgStrokeWidth(context, stroke.toFloat())
+            nvgStrokePaint(context, nvgPaint)
             nvgStroke(context)
         }
         nvgClosePath(context)
@@ -153,6 +224,30 @@ object DrawUtil: IAccessor {
         NVGColor.calloc().use { nvgColor ->
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgFillColor(context, nvgColor)
+            nvgFontFace(context, font)
+            nvgFontSize(context, size.toFloat())
+            nvgTextAlign(context, getAlignFlags(alignment))
+            nvgText(context, x.toFloat(), y.toFloat(), text)
+        }
+        nvgClosePath(context)
+    }
+
+    @JvmStatic
+    fun drawString(text: String?, x: Number, y: Number, size: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        drawString("regular", text!!, x, y, size, gradient, alignment)
+    }
+    @JvmStatic
+    fun drawString(font: String, text: String, x: Number, y: Number, size: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgFillPaint(context, nvgPaint)
             nvgFontFace(context, font)
             nvgFontSize(context, size.toFloat())
             nvgTextAlign(context, getAlignFlags(alignment))
