@@ -1,6 +1,5 @@
 package dev.blend.ui.dropdown.components.values
 
-import dev.blend.Client
 import dev.blend.handler.impl.ThemeHandler
 import dev.blend.ui.dropdown.components.AbstractValueComponent
 import dev.blend.ui.dropdown.components.ModuleComponent
@@ -8,7 +7,6 @@ import dev.blend.util.animations.SineOutAnimation
 import dev.blend.util.render.Alignment
 import dev.blend.util.render.ColorUtil
 import dev.blend.util.render.DrawUtil
-import dev.blend.util.render.DrawUtil.drawString
 import dev.blend.value.impl.ModeValue
 import org.lwjgl.glfw.GLFW
 
@@ -19,59 +17,38 @@ class ModeValueComponent(
     parent, value, height = 20.0
 ) {
 
-    val expandAnimation = SineOutAnimation()
-    val expandToggleAnimation = SineOutAnimation()
-    private val initialHeight = height
-    private var expanded = false
+    private val expandToggleAnimation = SineOutAnimation(100)
+    private var clicked = false
+    private var button = -1
 
     override fun init() {
 
     }
 
     override fun render(mouseX: Int, mouseY: Int) {
-        var veryTemporaryHeight = initialHeight
-        var yPos = y + (initialHeight / 2.0)
-        val hi = ColorUtil.mixColors(ThemeHandler.getBackground(), ThemeHandler.getPrimary(), 0.1)
+        val e = ColorUtil.applyOpacity(ThemeHandler.getTextColor(), expandToggleAnimation.get())
         with(DrawUtil) {
-            val maxStringWidth = value.modes.maxOf { getStringWidth("regular", it, 8) }
-            save()
-            intersectScissor(x, y, width, height)
-            roundedRect((x + width) - (padding / 2.0), y + (padding / 2.0), maxStringWidth + padding, height - padding, 2, hi, Alignment.TOP_RIGHT)
-            drawString(value.name, x + padding, yPos, 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
-            drawString(value.get(), (x + width) - padding, yPos, 8, ThemeHandler.getTextColor(), Alignment.CENTER_RIGHT)
-            yPos += 14.0
-            value.modes.filter {
-                !it.equals(value.get(), true)
-            }.forEach{ mode ->
-                drawString(mode, (x + width) - padding, yPos, 8, ThemeHandler.getTextColor(), Alignment.CENTER_RIGHT)
-                yPos += 14.0
-                veryTemporaryHeight += 14.0
-            }
-            restore()
+            drawString(value.name + ": ", x + padding, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
+            drawString(value.get(), (x + width) - padding, y + (height / 2.0), 8, e, Alignment.CENTER_RIGHT)
         }
-        this.height = expandAnimation.get()
-        expandAnimation.animate(if (expanded) veryTemporaryHeight else initialHeight)
-        expandToggleAnimation.animate(if (expanded) 1.0 else 0.0)
+        expandToggleAnimation.animate(if (clicked) 0.5 else 1.0)
+        if (clicked && expandToggleAnimation.finished) {
+            when (button) {
+                GLFW.GLFW_MOUSE_BUTTON_LEFT -> value.next()
+                GLFW.GLFW_MOUSE_BUTTON_RIGHT -> value.previous()
+                else -> {}
+            }
+        }
+        if (expandToggleAnimation.finished) {
+            clicked = false
+        }
     }
 
     override fun click(mouseX: Double, mouseY: Double, mouseButton: Int): Boolean {
-        var yPos = y + (initialHeight / 2.0)
-        if (isOver(x, y, width, initialHeight, mouseX, mouseY)) {
-            expanded = !expanded
+        if (isOver(x, y, width, height, mouseX, mouseY) && value.modes.size > 1) {
+            button = mouseButton
+            clicked = true
             return true
-        }
-        if (expanded) {
-            yPos += 14.0
-            value.modes.filter {
-                !it.equals(value.get(), true)
-            }.forEach{ mode ->
-                if (isOver(x, yPos - (initialHeight / 2.0), width, 14.0, mouseX, mouseY)) {
-                    value.set(mode)
-                    expanded = false
-                    return true
-                }
-                yPos += 14.0
-            }
         }
         return false
     }
@@ -86,10 +63,6 @@ class ModeValueComponent(
 
     override fun close() {
 
-    }
-
-    override fun isExpanding(): Boolean {
-        return !expandAnimation.finished
     }
 
 }

@@ -66,7 +66,7 @@ class ModuleComponent(
             if (it.value.visibility()) {
                 it.render(mouseX, mouseY)
                 veryRealHeight +=
-                    if (it.isExpanding() && (it is ModeValueComponent)) {
+                    if (it.isExpanding() && (it is ColorValueComponent)) {
                         it.expandAnimation.get()
                     } else {
                         it.height

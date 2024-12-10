@@ -34,6 +34,22 @@ class ModeValue(
     fun isNot(value: String): Boolean {
         return !`is`(value)
     }
+    fun next() {
+        val index = modes.indexOf(value)
+        if (index < modes.size - 1) {
+            set(modes[index + 1])
+        } else {
+            set(modes.first())
+        }
+    }
+    fun previous() {
+        val index = modes.indexOf(value)
+        if (index > 0) {
+            set(modes[index - 1])
+        } else {
+            set(modes.last())
+        }
+    }
 
     override fun set(value: String) {
         if (modes.contains(value)) {

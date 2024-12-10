@@ -2,7 +2,7 @@ package dev.blend.util.animations
 
 abstract class AbstractAnimation(
     private val function: (Double) -> Double,
-    var duration: Double,
+    var duration: Number,
 ) {
     private var currentTime = 0L
     private var startTime = 0L
@@ -21,7 +21,7 @@ abstract class AbstractAnimation(
             this.targetValue = targetValue
             reset()
         } else {
-            finished = (currentTime - duration) > startTime
+            finished = (currentTime - duration.toDouble()) > startTime
             if (finished) {
                 currentValue = targetValue
                 return
@@ -39,7 +39,7 @@ abstract class AbstractAnimation(
 
     fun progress(): Double {
         // No, this isn't a redundant cast.
-        return ((System.currentTimeMillis() - startTime).toDouble() / duration).toDouble()
+        return ((System.currentTimeMillis() - startTime).toDouble() / duration.toDouble()).toDouble()
     }
 
     fun reset() {
