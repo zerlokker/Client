@@ -16,7 +16,7 @@ class NumberValueComponent(
     parent, value, height = 30.0
 ) {
 
-    private val dragAnimation = LinearAnimation()
+    private val dragAnimation = LinearAnimation(100)
     private val dragDependentAnimation = SineOutAnimation()
     private val selectAnimation = SineOutAnimation()
     private var held = false
@@ -49,7 +49,6 @@ class NumberValueComponent(
             roundedRect(sliderX + dragAnimation.get(), sliderY, dragIndicator + (dragDependentAnimation.get() * 3.0), dragIndicator, dragIndicator / 2.0, ThemeHandler.getContrast(), Alignment.CENTER)
             roundedRect(sliderX + dragAnimation.get() , sliderY, holdIndicator + (dragDependentAnimation.get() * 3.0), holdIndicator, holdIndicator / 2.0, heldColor, Alignment.CENTER)
         }
-        dragAnimation.duration = 100.0
         dragAnimation.animate(relativeValue * sliderW)
         dragDependentAnimation.animate(if (dragAnimation.finished) 0.0 else 1.0)
         selectAnimation.animate(if (held) 1.0 else 0.0)

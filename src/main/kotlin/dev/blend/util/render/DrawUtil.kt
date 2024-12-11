@@ -212,6 +212,26 @@ object DrawUtil: IAccessor {
         }
         nvgClosePath(context)
     }
+    @JvmStatic
+    fun roundedRect(x: Number, y: Number, width: Number, height: Number, radius: DoubleArray, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+        if (radius.size != 4) {
+            throw IllegalArgumentException("DoubleArray of size 4 required. only ${radius.size} found.")
+        }
+        nvgBeginPath(context)
+        NVGPaint.calloc().use { nvgPaint ->
+            nvgRoundedRectVarying(context, alignX(x, width, alignment), alignY(y, height, alignment), width.toFloat(), height.toFloat(), radius[0].toFloat(), radius[1].toFloat(), radius[2].toFloat(), radius[3].toFloat())
+            NVGColor.calloc().use { primary ->
+                NVGColor.calloc().use { secondary ->
+                    nvgRGBAf(gradient.primary.red / 255f, gradient.primary.green / 255f, gradient.primary.blue / 255f, gradient.primary.alpha / 255f, primary)
+                    nvgRGBAf(gradient.secondary.red / 255f, gradient.secondary.green / 255f, gradient.secondary.blue / 255f, gradient.secondary.alpha / 255f, secondary)
+                    nvgLinearGradient(context, gradient.origin.x.toFloat(), gradient.origin.y.toFloat(), gradient.end.x.toFloat(), gradient.end.y.toFloat(), primary, secondary, nvgPaint)
+                }
+            }
+            nvgFillPaint(context, nvgPaint)
+            nvgFill(context)
+        }
+        nvgClosePath(context)
+    }
 
     // Font Rendering
     @JvmStatic
@@ -266,6 +286,53 @@ object DrawUtil: IAccessor {
             width = bounds[2] - bounds[0]
         }
         return width.toDouble()
+    }
+
+    // custom shit
+
+    /**
+     * Q: How bad is this code?
+     * A: yes.
+     */
+    @JvmStatic
+    fun rainbowBar(x: Number, y: Number, width: Number, height: Number, radius: Number, alignment: Alignment = Alignment.TOP_LEFT) {
+        val yay = width.toDouble() / 10.0
+        var x = x.toDouble()
+        for (hue in 0..9) {
+            roundedRect(
+                x, y, yay, height,
+                doubleArrayOf(
+                    if (hue == 0) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 9) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    },
+                    if (hue == 0) {
+                        radius.toDouble()
+                    } else {
+                        0.0
+                    }
+                ),
+                Gradient(
+                    Color.getHSBColor(hue / 10.0f, 1.0f, 1.0f),
+                    Color.getHSBColor((hue / 10.0f) + 0.1f, 1.0f, 1.0f),
+                    Point(x, y),
+                    Point(x + yay, y)
+                ),
+                alignment
+            )
+            x += yay
+        }
     }
 
     private fun preRender() {
