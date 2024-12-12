@@ -36,7 +36,7 @@ class BooleanValueComponent(
         with(DrawUtil) {
             drawString(value.name, x + padding, y + (height / 2.0), 8, ThemeHandler.getTextColor(), Alignment.CENTER_LEFT)
             roundedRect(pillX, pillY, pillWidth, pillHeight, pillHeight / 2.0, pillColor, Alignment.CENTER_RIGHT)
-            roundedRect(indicatorX, pillY, indicatorRadius + ((indicatorRadius / 3.0) * toggleDependentAnimation.get()), indicatorRadius, indicatorRadius / 2.0, ThemeHandler.getContrast(), Alignment.CENTER)
+            roundedRect(indicatorX, pillY, indicatorRadius + ((indicatorRadius / 3.0) * toggleDependentAnimation.get()), indicatorRadius, indicatorRadius / 2.0, ThemeHandler.getTextColor(), Alignment.CENTER)
         }
         toggleAnimation.animate(if (value.get()) 1.0 else 0.0)
         toggleDependentAnimation.animate(if (toggleAnimation.finished) 0.0 else 1.0)

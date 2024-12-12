@@ -46,7 +46,7 @@ class NumberValueComponent(
             drawString(value.toString(), (x + width) - padding, y + padding, 8, heldColor, Alignment.CENTER_RIGHT)
             roundedRect(sliderX, sliderY, sliderW, sliderH, sliderH / 2.0, ThemeHandler.getContrast(), Alignment.CENTER_LEFT)
             roundedRect(sliderX, sliderY, dragAnimation.get(), sliderH, sliderH / 2.0, ThemeHandler.getPrimary(), Alignment.CENTER_LEFT)
-            roundedRect(sliderX + dragAnimation.get(), sliderY, dragIndicator + (dragDependentAnimation.get() * 3.0), dragIndicator, dragIndicator / 2.0, ThemeHandler.getContrast(), Alignment.CENTER)
+            roundedRect(sliderX + dragAnimation.get(), sliderY, dragIndicator + (dragDependentAnimation.get() * 3.0), dragIndicator, dragIndicator / 2.0, ThemeHandler.getTextColor(), Alignment.CENTER)
             roundedRect(sliderX + dragAnimation.get() , sliderY, holdIndicator + (dragDependentAnimation.get() * 3.0), holdIndicator, holdIndicator / 2.0, heldColor, Alignment.CENTER)
         }
         dragAnimation.animate(relativeValue * sliderW)
