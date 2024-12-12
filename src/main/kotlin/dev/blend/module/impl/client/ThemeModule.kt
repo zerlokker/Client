@@ -18,6 +18,7 @@ object ThemeModule: Module() {
     val accent = ColorValue("Accent", this, Color(0, 160, 255))
     val secondary = ColorValue("Secondary", this, Color(160, 0, 255))
     val theme = ModeValue("Theme", this, arrayOf("Dark", "Light"))
+    val font = ModeValue("Font", this, arrayOf("Regular", "Ubuntu"))
     val gradientSpeed = NumberValue("Speed", this, 500.0, 200.0, 2000.0, 100.0)
 
     override fun onEnable() {

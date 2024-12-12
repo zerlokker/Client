@@ -17,7 +17,7 @@ import java.nio.ByteBuffer
 
 object DrawUtil: IAccessor {
 
-    private var context = -1L
+    var context = -1L
     private lateinit var regularFont: ByteBuffer
 
     @JvmStatic
@@ -26,12 +26,7 @@ object DrawUtil: IAccessor {
         if (context == -1L) {
             throw IllegalStateException("NanoVG Context could not be created.")
         }
-        try {
-            regularFont = MiscUtil.getResourceAsByteBuffer("fonts/regular.ttf")
-            nvgCreateFontMem(context, "regular", regularFont, false)
-        } catch (_: IOException) {
-            throw IllegalStateException("Fonts could not be initialized.")
-        }
+        ResourceManager.init()
     }
 
     @JvmStatic
@@ -235,29 +230,20 @@ object DrawUtil: IAccessor {
 
     // Font Rendering
     @JvmStatic
-    fun drawString(text: String?, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
-        drawString("regular", text!!, x, y, size, color, alignment)
-    }
-    @JvmStatic
-    fun drawString(font: String, text: String, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT) {
+    fun drawString(text: String, x: Number, y: Number, size: Number, color: Color, alignment: Alignment = Alignment.TOP_LEFT, font: FontResource = ResourceManager.FontResources.regular) {
         nvgBeginPath(context)
         NVGColor.calloc().use { nvgColor ->
             nvgRGBAf(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f, nvgColor)
             nvgFillColor(context, nvgColor)
-            nvgFontFace(context, font)
+            nvgFontFace(context, font.identifier)
             nvgFontSize(context, size.toFloat())
             nvgTextAlign(context, getAlignFlags(alignment))
             nvgText(context, x.toFloat(), y.toFloat(), text)
         }
         nvgClosePath(context)
     }
-
     @JvmStatic
-    fun drawString(text: String?, x: Number, y: Number, size: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
-        drawString("regular", text!!, x, y, size, gradient, alignment)
-    }
-    @JvmStatic
-    fun drawString(font: String, text: String, x: Number, y: Number, size: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT) {
+    fun drawString(text: String, x: Number, y: Number, size: Number, gradient: Gradient, alignment: Alignment = Alignment.TOP_LEFT, font: FontResource = ResourceManager.FontResources.regular) {
         nvgBeginPath(context)
         NVGPaint.calloc().use { nvgPaint ->
             NVGColor.calloc().use { primary ->
@@ -268,7 +254,7 @@ object DrawUtil: IAccessor {
                 }
             }
             nvgFillPaint(context, nvgPaint)
-            nvgFontFace(context, font)
+            nvgFontFace(context, font.identifier)
             nvgFontSize(context, size.toFloat())
             nvgTextAlign(context, getAlignFlags(alignment))
             nvgText(context, x.toFloat(), y.toFloat(), text)
@@ -276,9 +262,9 @@ object DrawUtil: IAccessor {
         nvgClosePath(context)
     }
     @JvmStatic
-    fun getStringWidth(font: String, text: String, size: Number): Double {
+    fun getStringWidth(text: String, size: Number, font: FontResource = ResourceManager.FontResources.regular): Double {
         var width: Float
-        nvgFontFace(context, font)
+        nvgFontFace(context, font.identifier)
         nvgFontSize(context, size.toFloat())
         MemoryStack.stackPush().use {
             val bounds = floatArrayOf(0.0f, 0.0f, 0.0f, 0.0f)
