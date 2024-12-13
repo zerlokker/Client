@@ -34,5 +34,16 @@ object ChatUtil: IAccessor {
         text.append("${Formatting.RESET}$message")
         mc.inGameHud.chatHud.addMessage(text)
     }
+    fun aquafy(message: String): String {
+        return "${Formatting.AQUA}${message}${Formatting.RESET}"
+    }
+    fun format(message: String): String {
+        return message
+            .replace("@", Formatting.AQUA.toString())
+            .replace("*", Formatting.BOLD.toString())
+            .replace("_", Formatting.ITALIC.toString())
+            .replace("!", Formatting.RESET.toString())
+            .replace("%", Formatting.RED.toString())
+    }
 
 }

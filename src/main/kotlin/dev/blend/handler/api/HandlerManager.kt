@@ -11,6 +11,7 @@ object HandlerManager: IManager {
     override fun initialize() {
         handlers.addAll(arrayOf(
             KeyPressHandler(),
+            ChatMessageHandler(),
             ThemeHandler
         ))
         handlers.forEach {

@@ -27,4 +27,10 @@ object ModuleManager: IManager {
         }
     }
 
+    fun getModule(name: String): Module? {
+        return modules.find { module ->
+            module.name.equals(name, true)
+        }
+    }
+
 }

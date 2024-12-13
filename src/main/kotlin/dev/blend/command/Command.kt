@@ -1,10 +1,13 @@
 package dev.blend.command
 
 import dev.blend.command.api.CommandInfo
+import dev.blend.util.player.ChatUtil.format
+import dev.blend.util.player.ChatUtil.info
 
 abstract class Command {
 
     val commandInfo: CommandInfo
+    val name get() = commandInfo.names.first()
 
     init {
         if (this::class.java.isAnnotationPresent(CommandInfo::class.java)) {
@@ -16,8 +19,11 @@ abstract class Command {
 
     abstract fun execute(args: List<String>)
 
-    fun getName(): String {
-        return commandInfo.names[0]
+    protected fun usage() {
+        info("Usage of ${format("@$name!")}:")
+        commandInfo.syntax.forEach { syntax ->
+            info(format(syntax), false)
+        }
     }
 
 }
